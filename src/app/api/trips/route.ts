@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { title, slug, destination, startDate, endDate, rsvpDeadline } = body;
+    const { title, slug, destination, startDate, endDate, rsvpDeadline, budgetMin, budgetMax } = body;
 
     if (!title || !slug) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
@@ -63,6 +63,8 @@ export async function POST(request: Request) {
         start_date: startDate,
         end_date: endDate,
         rsvp_deadline: rsvpDeadline ? new Date(rsvpDeadline).toISOString() : null,
+        budget_min: budgetMin ?? null,
+        budget_max: budgetMax ?? null,
         status: 'planning',
         created_by: null, // Will be updated after member is created
       })
