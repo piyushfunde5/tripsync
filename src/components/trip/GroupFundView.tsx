@@ -208,7 +208,7 @@ export default function GroupFundView({ slug, tripTitle, members, currentMemberI
   };
 
   if (loading) {
-    return <div className="text-center py-8 text-neutral-400 text-sm">Loading fund...</div>;
+    return <div style={{ textAlign: 'center', padding: '32px 0', fontSize: 13, color: 'var(--ts-ink-3)', fontFamily: 'var(--ts-sans)' }}>Loading fund…</div>;
   }
 
   // Setup view — no fund exists
@@ -223,52 +223,35 @@ export default function GroupFundView({ slug, tripTitle, members, currentMemberI
       );
     }
 
+    const inputStyle: React.CSSProperties = { width: '100%', padding: '10px 13px', border: '1.5px solid var(--ts-line-2)', borderRadius: 10, background: 'var(--ts-card)', color: 'var(--ts-ink)', fontSize: 14, fontFamily: 'var(--ts-sans)', outline: 'none', boxSizing: 'border-box' };
+    const labelStyle: React.CSSProperties = { display: 'block', fontSize: 11.5, fontWeight: 700, color: 'var(--ts-ink-2)', letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 6 };
+
     return (
-      <div className="space-y-4">
-        <div className="bg-white rounded-xl border border-neutral-100 shadow-sm p-4">
-          <h3 className="text-base font-semibold text-neutral-900 mb-1">Set Up Group Fund</h3>
-          <p className="text-xs text-neutral-500 mb-4">
-            Collect a fixed amount from everyone. The treasurer manages the pool.
-          </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div style={{ background: 'var(--ts-card)', border: '1px solid var(--ts-line)', borderRadius: 16, boxShadow: 'var(--ts-shadow-sm)', padding: '16px' }}>
+          <div style={{ fontFamily: 'var(--ts-serif)', fontWeight: 500, fontSize: 18, color: 'var(--ts-ink)', marginBottom: 4 }}>Set Up Group Fund</div>
+          <div style={{ fontSize: 12.5, color: 'var(--ts-ink-3)', marginBottom: 16 }}>Collect a fixed amount from everyone. The treasurer manages the pool.</div>
 
-          {error && <div className="p-2 bg-red-50 text-red-700 rounded-lg text-xs mb-3">{error}</div>}
+          {error && <div style={{ padding: '9px 13px', background: 'var(--ts-err-bg)', borderRadius: 10, fontSize: 13, color: 'var(--ts-err)', marginBottom: 14 }}>{error}</div>}
 
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-1">Target per person</label>
-              <div className="flex items-center gap-1">
-                <span className="text-neutral-400">₹</span>
-                <input
-                  type="number"
-                  value={targetPerPerson}
-                  onChange={(e) => setTargetPerPerson(e.target.value)}
-                  className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                  min="0"
-                />
+              <label style={labelStyle as React.CSSProperties}>Target per person</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 16, color: 'var(--ts-ink-2)' }}>₹</span>
+                <input type="number" value={targetPerPerson} onChange={(e) => setTargetPerPerson(e.target.value)} style={{ ...inputStyle, flex: 1 }} min="0" />
               </div>
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-1">Treasurer</label>
-              <select
-                value={treasurerId}
-                onChange={(e) => setTreasurerId(e.target.value)}
-                className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              >
+              <label style={labelStyle as React.CSSProperties}>Treasurer</label>
+              <select value={treasurerId} onChange={(e) => setTreasurerId(e.target.value)} style={inputStyle}>
                 {members.map((m) => (
-                  <option key={m.id as string} value={m.id as string}>
-                    {m.name as string}{m.id === currentMemberId ? ' (You)' : ''}
-                  </option>
+                  <option key={m.id as string} value={m.id as string}>{m.name as string}{m.id === currentMemberId ? ' (You)' : ''}</option>
                 ))}
               </select>
             </div>
-
-            <button
-              onClick={handleSetup}
-              disabled={settingUp}
-              className="w-full py-2.5 bg-primary text-white rounded-xl font-semibold text-sm hover:bg-primary-dark transition-colors disabled:opacity-50"
-            >
-              {settingUp ? 'Setting up...' : 'Activate Group Fund'}
+            <button onClick={handleSetup} disabled={settingUp} style={{ width: '100%', padding: '13px', background: settingUp ? 'var(--ts-sand)' : 'var(--ts-terra)', color: settingUp ? 'var(--ts-ink-3)' : 'white', border: 'none', borderRadius: 'var(--ts-r-pill)', fontWeight: 700, fontSize: 14, cursor: settingUp ? 'not-allowed' : 'pointer', fontFamily: 'var(--ts-sans)', boxShadow: settingUp ? 'none' : '0 6px 20px -4px rgba(217,107,63,.45)' }}>
+              {settingUp ? 'Setting up…' : 'Activate Group Fund'}
             </button>
           </div>
         </div>
@@ -278,247 +261,163 @@ export default function GroupFundView({ slug, tripTitle, members, currentMemberI
 
   const fund = data.fund;
   const progressPct = fund.totalTarget > 0 ? Math.min((fund.totalCollected / fund.totalTarget) * 100, 100) : 0;
+  const progressColor = progressPct >= 100 ? 'var(--ts-ok)' : progressPct >= 50 ? 'var(--ts-sun)' : 'var(--ts-err)';
+
+  const inputSt: React.CSSProperties = { width: '100%', padding: '10px 13px', border: '1.5px solid var(--ts-line-2)', borderRadius: 10, background: 'var(--ts-card)', color: 'var(--ts-ink)', fontSize: 14, fontFamily: 'var(--ts-sans)', outline: 'none', boxSizing: 'border-box' };
+  const cardSt: React.CSSProperties = { background: 'var(--ts-card)', border: '1px solid var(--ts-line)', borderRadius: 16, boxShadow: 'var(--ts-shadow-sm)', padding: '14px' };
+  const secTitle: React.CSSProperties = { fontSize: 11.5, fontWeight: 700, color: 'var(--ts-ink-2)', letterSpacing: '.08em', textTransform: 'uppercase' };
 
   return (
-    <div className="space-y-4">
-      {error && <div className="p-2 bg-red-50 text-red-700 rounded-lg text-xs">{error}</div>}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {error && <div style={{ padding: '9px 13px', background: 'var(--ts-err-bg)', borderRadius: 10, fontSize: 13, color: 'var(--ts-err)' }}>{error}</div>}
 
-      {/* Fund Dashboard */}
-      <div className="bg-white rounded-xl border border-neutral-100 shadow-sm p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-base font-semibold text-neutral-900">Group Fund</h3>
-          {!fund.is_active && (
-            <span className="text-xs bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded-full">Closed</span>
-          )}
+      {/* Fund overview card */}
+      <div style={cardSt}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <div style={{ fontFamily: 'var(--ts-serif)', fontWeight: 500, fontSize: 18, color: 'var(--ts-ink)' }}>Group Fund</div>
+          {!fund.is_active && <span style={{ fontSize: 10, background: 'var(--ts-card-2)', color: 'var(--ts-ink-3)', padding: '2px 8px', borderRadius: 999, fontWeight: 600, letterSpacing: '.06em', textTransform: 'uppercase' }}>Closed</span>}
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mb-3">
-          <div className="text-center">
-            <p className="text-xs text-neutral-500">Collected</p>
-            <p className="text-sm font-bold text-green-600">{formatCurrency(fund.totalCollected)}</p>
-          </div>
-          <div className="text-center">
-            <p className="text-xs text-neutral-500">Spent</p>
-            <p className="text-sm font-bold text-red-600">{formatCurrency(fund.totalSpent)}</p>
-          </div>
-          <div className="text-center">
-            <p className="text-xs text-neutral-500">Remaining</p>
-            <p className={`text-sm font-bold ${fund.remaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {formatCurrency(fund.remaining)}
-            </p>
-          </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 14 }}>
+          {[
+            { label: 'Collected', val: fund.totalCollected, color: 'var(--ts-ok)' },
+            { label: 'Spent',     val: fund.totalSpent,     color: 'var(--ts-err)' },
+            { label: 'Remaining', val: fund.remaining,      color: fund.remaining >= 0 ? 'var(--ts-ok)' : 'var(--ts-err)' },
+          ].map(({ label, val, color }) => (
+            <div key={label} style={{ textAlign: 'center', padding: '10px 6px', background: 'var(--ts-card-2)', borderRadius: 10 }}>
+              <div style={{ fontSize: 10, color: 'var(--ts-ink-3)', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 4 }}>{label}</div>
+              <div style={{ fontFamily: 'var(--ts-serif)', fontSize: 16, fontWeight: 500, color }}>{formatCurrency(val)}</div>
+            </div>
+          ))}
         </div>
 
-        {/* Progress bar */}
-        <div className="bg-neutral-100 rounded-full h-2.5 overflow-hidden mb-1">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ${
-              progressPct >= 100 ? 'bg-green-500' : progressPct >= 50 ? 'bg-amber-400' : 'bg-red-400'
-            }`}
-            style={{ width: `${progressPct}%` }}
-          />
+        <div style={{ height: 6, borderRadius: 3, background: 'var(--ts-card-2)', overflow: 'hidden', marginBottom: 4 }}>
+          <div style={{ width: `${progressPct}%`, height: '100%', background: progressColor, transition: 'width .5s ease' }} />
         </div>
-        <p className="text-[10px] text-neutral-400 text-right">
+        <div style={{ fontSize: 10, color: 'var(--ts-ink-3)', textAlign: 'right' }}>
           {formatCurrency(fund.totalCollected)} / {formatCurrency(fund.totalTarget)} target
-        </p>
+        </div>
 
         {fund.treasurer && (
-          <div className="flex items-center gap-1.5 mt-2 text-xs text-neutral-500">
-            <Avatar name={fund.treasurer.name} avatarUrl={fund.treasurer.avatar_url} size="sm" />
-            <span>Treasurer: {fund.treasurer.name}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, fontSize: 12, color: 'var(--ts-ink-2)' }}>
+            <Avatar name={fund.treasurer.name} avatarUrl={fund.treasurer.avatar_url} size={22} />
+            <span>Treasurer: <strong>{fund.treasurer.name}</strong></span>
           </div>
         )}
       </div>
 
-      {/* Contribution Tracking */}
-      <div className="bg-white rounded-xl border border-neutral-100 shadow-sm p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-neutral-900">Contributions</h3>
+      {/* Contributions */}
+      <div style={cardSt}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={secTitle}>Contributions</div>
           {canManage && fund.is_active && (
-            <button
-              onClick={() => setShowContribForm(!showContribForm)}
-              className="text-xs text-primary font-medium"
-            >
+            <button onClick={() => setShowContribForm(!showContribForm)} style={{ fontSize: 12, fontWeight: 700, color: 'var(--ts-terra)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>
               {showContribForm ? 'Cancel' : '+ Log Payment'}
             </button>
           )}
         </div>
 
-        {/* Contribution form */}
         {showContribForm && (
-          <div className="bg-neutral-50 rounded-lg p-3 mb-3 space-y-2">
-            <select
-              value={contribMemberId}
-              onChange={(e) => setContribMemberId(e.target.value)}
-              className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm"
-            >
+          <div style={{ background: 'var(--ts-card-2)', borderRadius: 12, padding: 12, marginBottom: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <select value={contribMemberId} onChange={(e) => setContribMemberId(e.target.value)} style={inputSt}>
               <option value="">Select member</option>
-              {members.map((m) => (
-                <option key={m.id as string} value={m.id as string}>{m.name as string}</option>
-              ))}
+              {members.map((m) => <option key={m.id as string} value={m.id as string}>{m.name as string}</option>)}
             </select>
-            <input
-              type="number"
-              value={contribAmount}
-              onChange={(e) => setContribAmount(e.target.value)}
-              placeholder="Amount paid"
-              className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm"
-              min="0"
-            />
-            <button
-              onClick={handleContribution}
-              disabled={addingContrib}
-              className="w-full py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50"
-            >
-              {addingContrib ? 'Logging...' : 'Log Contribution'}
+            <input type="number" value={contribAmount} onChange={(e) => setContribAmount(e.target.value)} placeholder="Amount paid" style={inputSt} min="0" />
+            <button onClick={handleContribution} disabled={addingContrib} style={{ padding: '10px', background: 'var(--ts-ok)', color: 'white', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: addingContrib ? 'not-allowed' : 'pointer', fontFamily: 'var(--ts-sans)', opacity: addingContrib ? .6 : 1 }}>
+              {addingContrib ? 'Logging…' : 'Log Contribution'}
             </button>
           </div>
         )}
 
-        {/* Member list */}
-        <div className="space-y-2">
-          {data.memberContributions.map((mc) => (
-            <div key={mc.memberId} className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Avatar name={mc.name} avatarUrl={mc.avatarUrl} size="sm" />
-                <span className="text-sm text-neutral-700">{mc.name}</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {data.memberContributions.map((mc) => {
+            const statusBg = mc.status === 'paid' ? 'var(--ts-ok-bg)' : mc.status === 'partial' ? 'var(--ts-warn-bg)' : 'var(--ts-err-bg)';
+            const statusFg = mc.status === 'paid' ? 'var(--ts-ok)' : mc.status === 'partial' ? 'var(--ts-warn)' : 'var(--ts-err)';
+            return (
+              <div key={mc.memberId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Avatar name={mc.name} avatarUrl={mc.avatarUrl} size={28} />
+                  <span style={{ fontSize: 13, color: 'var(--ts-ink)' }}>{mc.name}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 11.5, color: 'var(--ts-ink-2)' }}>{formatCurrency(mc.contributed)} / {formatCurrency(mc.target)}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 999, background: statusBg, color: statusFg }}>
+                    {mc.status === 'paid' ? 'Paid' : mc.status === 'partial' ? 'Partial' : 'Unpaid'}
+                  </span>
+                  {mc.status !== 'paid' && (
+                    <WhatsAppShareButton message={`Hey ${mc.name}, your contribution for ${tripTitle} is pending. Target: ₹${mc.target.toLocaleString('en-IN')}. Please check: ${tripUrl}`} label="" className="!px-1.5 !py-1 text-[10px]" />
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-neutral-600">
-                  {formatCurrency(mc.contributed)} / {formatCurrency(mc.target)}
-                </span>
-                <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
-                  mc.status === 'paid' ? 'bg-green-100 text-green-700' :
-                  mc.status === 'partial' ? 'bg-amber-100 text-amber-700' :
-                  'bg-red-100 text-red-700'
-                }`}>
-                  {mc.status === 'paid' ? 'Paid' : mc.status === 'partial' ? 'Partial' : 'Unpaid'}
-                </span>
-                {mc.status !== 'paid' && (
-                  <WhatsAppShareButton
-                    message={`Hey ${mc.name}, your contribution for ${tripTitle} is pending. Target: ₹${mc.target.toLocaleString('en-IN')}. Please check: ${tripUrl}`}
-                    label=""
-                    className="!px-1.5 !py-1 text-[10px]"
-                  />
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       {/* Fund Expenses */}
-      <div className="bg-white rounded-xl border border-neutral-100 shadow-sm p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-neutral-900">
-            Fund Expenses ({data.fundExpenses.length})
-          </h3>
+      <div style={cardSt}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={secTitle}>Fund Expenses ({data.fundExpenses.length})</div>
           {canManage && fund.is_active && (
-            <button
-              onClick={() => setShowExpenseForm(!showExpenseForm)}
-              className="text-xs text-primary font-medium"
-            >
+            <button onClick={() => setShowExpenseForm(!showExpenseForm)} style={{ fontSize: 12, fontWeight: 700, color: 'var(--ts-terra)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>
               {showExpenseForm ? 'Cancel' : '+ Add Expense'}
             </button>
           )}
         </div>
 
-        {/* Expense form */}
         {showExpenseForm && (
-          <div className="bg-neutral-50 rounded-lg p-3 mb-3 space-y-2">
-            <input
-              type="text"
-              value={expenseDesc}
-              onChange={(e) => setExpenseDesc(e.target.value)}
-              placeholder="Description"
-              className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm"
-            />
-            <input
-              type="number"
-              value={expenseAmount}
-              onChange={(e) => setExpenseAmount(e.target.value)}
-              placeholder="Amount"
-              className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-sm"
-              min="0"
-            />
-            <div className="flex gap-1.5 flex-wrap">
+          <div style={{ background: 'var(--ts-card-2)', borderRadius: 12, padding: 12, marginBottom: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <input type="text" value={expenseDesc} onChange={(e) => setExpenseDesc(e.target.value)} placeholder="Description" style={inputSt} />
+            <input type="number" value={expenseAmount} onChange={(e) => setExpenseAmount(e.target.value)} placeholder="Amount" style={inputSt} min="0" />
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {EXPENSE_CATEGORIES.map((cat) => (
-                <button
-                  key={cat.value}
-                  type="button"
-                  onClick={() => setExpenseCategory(cat.value)}
-                  className={`text-xs px-2 py-1 rounded-lg border ${
-                    expenseCategory === cat.value
-                      ? 'bg-primary/10 border-primary text-primary'
-                      : 'border-neutral-200 text-neutral-500'
-                  }`}
-                >
+                <button key={cat.value} type="button" onClick={() => setExpenseCategory(cat.value)} style={{ padding: '6px 10px', borderRadius: 8, border: `1.5px solid ${expenseCategory === cat.value ? 'var(--ts-terra)' : 'var(--ts-line-2)'}`, background: expenseCategory === cat.value ? 'rgba(217,107,63,.08)' : 'var(--ts-card)', fontSize: 16, cursor: 'pointer' }}>
                   {cat.icon}
                 </button>
               ))}
             </div>
-            <button
-              onClick={handleFundExpense}
-              disabled={addingExpense}
-              className="w-full py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark disabled:opacity-50"
-            >
-              {addingExpense ? 'Adding...' : 'Add Fund Expense'}
+            <button onClick={handleFundExpense} disabled={addingExpense} style={{ padding: '10px', background: 'var(--ts-terra)', color: 'white', border: 'none', borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: addingExpense ? 'not-allowed' : 'pointer', fontFamily: 'var(--ts-sans)', opacity: addingExpense ? .6 : 1 }}>
+              {addingExpense ? 'Adding…' : 'Add Fund Expense'}
             </button>
           </div>
         )}
 
         {data.fundExpenses.length > 0 ? (
-          <div className="space-y-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {data.fundExpenses.map((fe) => (
-              <div key={fe.id} className="flex items-center justify-between py-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">
-                    {EXPENSE_CATEGORIES.find((c) => c.value === fe.category)?.icon || '📦'}
-                  </span>
-                  <span className="text-sm text-neutral-700">{fe.description}</span>
+              <div key={fe.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--ts-line)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 16 }}>{EXPENSE_CATEGORIES.find((c) => c.value === fe.category)?.icon || '📦'}</span>
+                  <span style={{ fontSize: 13, color: 'var(--ts-ink)' }}>{fe.description}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-neutral-900">
-                    {formatCurrency(parseFloat(String(fe.amount)))}
-                  </span>
-                  <span className="text-[10px] text-neutral-400">
-                    {new Date(fe.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}
-                  </span>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontFamily: 'var(--ts-serif)', fontSize: 15, fontWeight: 500, color: 'var(--ts-ink)' }}>{formatCurrency(parseFloat(String(fe.amount)))}</div>
+                  <div style={{ fontSize: 10, color: 'var(--ts-ink-3)' }}>{new Date(fe.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}</div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-xs text-neutral-400 text-center py-3">No expenses yet.</p>
+          <div style={{ textAlign: 'center', padding: '12px 0', fontSize: 12.5, color: 'var(--ts-ink-3)' }}>No expenses yet.</div>
         )}
       </div>
 
-      {/* Close Fund (organizer/treasurer, when active) */}
+      {/* Close Fund */}
       {canManage && fund.is_active && (
-        <button
-          onClick={handleCloseFund}
-          className="w-full py-2.5 bg-neutral-100 text-neutral-600 rounded-xl text-sm font-medium hover:bg-neutral-200 transition-colors"
-        >
+        <button onClick={handleCloseFund} style={{ width: '100%', padding: '12px', background: 'var(--ts-card-2)', color: 'var(--ts-ink-2)', border: '1px solid var(--ts-line-2)', borderRadius: 'var(--ts-r-pill)', fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>
           Close Fund
         </button>
       )}
 
-      {/* Settlement summary when closed */}
+      {/* Surplus / Deficit when closed */}
       {!fund.is_active && fund.remaining !== 0 && (
-        <div className={`rounded-xl p-4 border shadow-sm ${
-          fund.remaining > 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
-        }`}>
-          <p className="text-sm font-medium text-neutral-900 mb-1">
-            {fund.remaining > 0 ? '💰 Surplus' : '⚠️ Deficit'}
-          </p>
-          <p className={`text-lg font-bold ${fund.remaining > 0 ? 'text-green-700' : 'text-red-700'}`}>
-            {formatCurrency(Math.abs(fund.remaining))}
-          </p>
-          <p className="text-xs text-neutral-500 mt-1">
-            {fund.remaining > 0
-              ? `₹${Math.round(fund.remaining / members.length).toLocaleString('en-IN')} to return per person`
-              : `₹${Math.round(Math.abs(fund.remaining) / members.length).toLocaleString('en-IN')} more needed per person`}
-          </p>
+        <div style={{ borderRadius: 14, padding: '14px 16px', border: `1px solid ${fund.remaining > 0 ? 'var(--ts-ok)' : 'var(--ts-err)'}30`, background: fund.remaining > 0 ? 'var(--ts-ok-bg)' : 'var(--ts-err-bg)' }}>
+          <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--ts-ink)', marginBottom: 4 }}>{fund.remaining > 0 ? '💰 Surplus' : '⚠️ Deficit'}</div>
+          <div style={{ fontFamily: 'var(--ts-serif)', fontSize: 22, fontWeight: 500, color: fund.remaining > 0 ? 'var(--ts-ok)' : 'var(--ts-err)' }}>{formatCurrency(Math.abs(fund.remaining))}</div>
+          <div style={{ fontSize: 11.5, color: 'var(--ts-ink-2)', marginTop: 4 }}>
+            {fund.remaining > 0 ? `₹${Math.round(fund.remaining / members.length).toLocaleString('en-IN')} to return per person` : `₹${Math.round(Math.abs(fund.remaining) / members.length).toLocaleString('en-IN')} more needed per person`}
+          </div>
         </div>
       )}
     </div>

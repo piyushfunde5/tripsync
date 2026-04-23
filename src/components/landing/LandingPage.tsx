@@ -170,6 +170,89 @@ export default function LandingPage() {
         </div>
       </div>
 
+      {/* App Preview */}
+      <div style={{ padding: '24px 22px 8px' }}>
+        <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.18em', color: 'var(--ts-terra-d)', fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 20, height: 1, background: 'var(--ts-terra-d)', display: 'block' }}/> Inside the app
+        </div>
+
+        {/* Phone frame */}
+        <div style={{ position: 'relative', background: 'var(--ts-ink)', borderRadius: 28, padding: '10px 6px 12px', boxShadow: '0 24px 64px -12px rgba(0,0,0,.35)', maxWidth: 300, margin: '0 auto' }}>
+          {/* Status bar notch */}
+          <div style={{ background: 'var(--ts-ink)', height: 10, borderRadius: '22px 22px 0 0', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: 4 }}>
+            <div style={{ width: 60, height: 5, background: 'rgba(255,255,255,.15)', borderRadius: 10 }}/>
+          </div>
+
+          {/* Screen */}
+          <div style={{ background: 'var(--ts-paper)', borderRadius: 20, overflow: 'hidden' }}>
+
+            {/* Trip top bar */}
+            <div style={{ padding: '8px 12px 8px', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid var(--ts-line)', background: 'var(--ts-paper)' }}>
+              <div style={{ width: 26, height: 26, borderRadius: 9, border: '1px solid var(--ts-line)', background: 'var(--ts-card)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="var(--ts-ink-2)" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 7, letterSpacing: '.18em', fontWeight: 700, color: 'var(--ts-terra)', textTransform: 'uppercase' }}>BLR → GOA</div>
+                <div style={{ fontFamily: 'var(--ts-serif)', fontSize: 13, fontWeight: 500, color: 'var(--ts-ink)', lineHeight: 1.1 }}>Goa with the squad</div>
+              </div>
+              <div style={{ display: 'flex' }}>
+                {['#d96b3f','#0f5257','#f2b04a'].map((c,i) => (
+                  <div key={i} style={{ width: 18, height: 18, borderRadius: '50%', background: c, border: '1.5px solid var(--ts-paper)', marginLeft: i===0?0:-5 }}/>
+                ))}
+              </div>
+            </div>
+
+            {/* Mini tabs */}
+            <div style={{ display: 'flex', borderBottom: '1px solid var(--ts-line)', padding: '0 8px', gap: 0, background: 'var(--ts-paper)' }}>
+              {[{l:'Overview',a:true},{l:'Polls',a:false},{l:'Itinerary',a:false},{l:'Tasks',a:false}].map(t => (
+                <div key={t.l} style={{ padding: '6px 8px', fontSize: 8, fontWeight: t.a ? 700 : 500, color: t.a ? 'var(--ts-terra)' : 'var(--ts-ink-3)', borderBottom: t.a ? '1.5px solid var(--ts-terra)' : '1.5px solid transparent' }}>{t.l}</div>
+              ))}
+            </div>
+
+            {/* RSVP card */}
+            <div style={{ margin: '8px 10px 0', background: 'var(--ts-card)', borderRadius: 10, padding: '8px 10px', border: '1px solid var(--ts-line)' }}>
+              <div style={{ fontSize: 8, fontWeight: 700, color: 'var(--ts-ink)', marginBottom: 6 }}>RSVP</div>
+              <div style={{ display: 'flex', gap: 5 }}>
+                {[{l:'Going',c:'#2f7a4e',bg:'#dfeedd'},{l:'Maybe',c:'#c48a1a',bg:'#faecc7'},{l:'Nope',c:'#c0392b',bg:'#fde8e4'}].map(b => (
+                  <div key={b.l} style={{ flex: 1, textAlign: 'center', padding: '4px 0', borderRadius: 6, background: b.l==='Going'?b.bg:'var(--ts-paper)', border: `1px solid ${b.l==='Going'?b.c:'var(--ts-line)'}`, fontSize: 7.5, fontWeight: b.l==='Going'?700:500, color: b.l==='Going'?b.c:'var(--ts-ink-2)' }}>{b.l}</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Crew list mini */}
+            <div style={{ margin: '6px 10px 0', background: 'var(--ts-card)', borderRadius: 10, padding: '8px 10px', border: '1px solid var(--ts-line)' }}>
+              <div style={{ fontSize: 8, fontWeight: 700, color: 'var(--ts-ink)', marginBottom: 6 }}>Crew · 6</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[{n:'Rohan K.',c:'#d96b3f',s:'Going'},{n:'Priya M.',c:'#0f5257',s:'Going'},{n:'Arjun S.',c:'#f2b04a',s:'Maybe'}].map(m => (
+                  <div key={m.n} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div style={{ width: 16, height: 16, borderRadius: '50%', background: m.c, flexShrink: 0 }}/>
+                    <div style={{ flex: 1, fontSize: 8, color: 'var(--ts-ink)', fontWeight: 500 }}>{m.n}</div>
+                    <div style={{ fontSize: 7, color: m.s==='Going'?'var(--ts-ok)':'var(--ts-sun)', fontWeight: 600 }}>{m.s}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Activity mini */}
+            <div style={{ margin: '6px 10px 8px', background: 'var(--ts-card)', borderRadius: 10, padding: '8px 10px', border: '1px solid var(--ts-line)' }}>
+              <div style={{ fontSize: 8, fontWeight: 700, color: 'var(--ts-ink)', marginBottom: 5 }}>Recent activity</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {['Rohan voted on "Where to stay?"','Priya added a task: Book cabs','Arjun RSVPed Going'].map((a,i) => (
+                  <div key={i} style={{ fontSize: 7.5, color: 'var(--ts-ink-2)', paddingLeft: 8, borderLeft: '2px solid var(--ts-line-2)' }}>{a}</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom tab bar */}
+            <div style={{ display: 'flex', borderTop: '1px solid var(--ts-line)', background: 'var(--ts-card)' }}>
+              {[{l:'Home',a:true},{l:'Polls',a:false},{l:'Map',a:false},{l:'Tasks',a:false},{l:'Split',a:false}].map(t => (
+                <div key={t.l} style={{ flex: 1, padding: '5px 0 6px', textAlign: 'center', fontSize: 7, fontWeight: t.a?700:500, color: t.a?'var(--ts-terra)':'var(--ts-ink-3)' }}>{t.l}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* How it works */}
       <div style={{ padding: '20px 22px 6px' }}>
         <div style={{ fontFamily: 'var(--ts-serif)', fontSize: 20, fontWeight: 500, marginBottom: 14, color: 'var(--ts-ink)' }}>How it works</div>

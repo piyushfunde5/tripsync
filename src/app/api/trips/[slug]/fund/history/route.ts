@@ -39,7 +39,7 @@ export async function GET(
 
     // Get fund
     const { data: fund } = await supabase
-      .from('group_funds')
+      .from('group_fund')
       .select('id')
       .eq('trip_id', trip.id)
       .single();

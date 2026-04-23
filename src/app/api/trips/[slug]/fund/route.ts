@@ -27,8 +27,8 @@ export async function GET(
 
     // Get fund
     const { data: fund } = await supabase
-      .from('group_funds')
-      .select('*, treasurer:members!group_funds_treasurer_id_fkey(id, name, avatar_url)')
+      .from('group_fund')
+      .select('*, treasurer:members!group_fund_treasurer_id_fkey(id, name, avatar_url)')
       .eq('trip_id', trip.id)
       .single();
 
@@ -137,7 +137,7 @@ export async function POST(
 
     // Check if fund already exists
     const { data: existing } = await supabase
-      .from('group_funds')
+      .from('group_fund')
       .select('id')
       .eq('trip_id', trip.id)
       .single();
@@ -167,7 +167,7 @@ export async function POST(
     }
 
     const { data: fund, error: insertError } = await supabase
-      .from('group_funds')
+      .from('group_fund')
       .insert({
         trip_id: trip.id,
         target_per_person: targetPerPerson,
@@ -238,7 +238,7 @@ export async function PATCH(
     if (isActive !== undefined) updateData.is_active = isActive;
 
     const { data: updated, error: updateError } = await supabase
-      .from('group_funds')
+      .from('group_fund')
       .update(updateData)
       .eq('trip_id', trip.id)
       .select()

@@ -42,7 +42,7 @@ export default function PollCard({ poll, currentMemberId, slug, canClose, totalM
 
   const isOpen = poll.status === 'open';
   const isPastDeadline = new Date(poll.deadline) < new Date();
-  const canVote = isOpen && !isPastDeadline;
+  const canVote = isOpen; // deadline is informational; only explicit close gates voting
 
   const myVotes = poll.votes.filter((v) => v.member?.id === currentMemberId);
   const myVotedOptionIds = new Set(myVotes.map((v) => v.option_id));

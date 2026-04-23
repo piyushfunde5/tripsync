@@ -38,8 +38,9 @@ function daysUntil(d?: string) {
 
 function TripCard({ trip }: { trip: Trip }) {
   const router = useRouter();
-  const from = trip.destination?.split(',')[0]?.slice(0, 3).toUpperCase() || '???';
-  const to = trip.destination?.split(',').pop()?.trim().slice(0, 3).toUpperCase() || '???';
+  const destParts = trip.destination?.split(',').map((s) => s.trim()).filter(Boolean) || [];
+  const from = destParts.length > 1 ? destParts[0].slice(0, 3).toUpperCase() : '✈';
+  const to = destParts.length > 0 ? destParts[destParts.length - 1].slice(0, 3).toUpperCase() : '?';
   const days = daysUntil(trip.start_date);
   const statusLabel = trip.status === 'ongoing' ? 'Happening now' : trip.status === 'completed' ? 'Trip complete' : days !== null && days > 0 ? `in ${days} days` : days === 0 ? 'Today!' : '';
 

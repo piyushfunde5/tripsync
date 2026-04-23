@@ -48,8 +48,9 @@ export default function TripDashboard({
   }));
 
   const dest = trip.destination as string | undefined;
-  const fromCode = dest?.split(',')[0]?.trim().slice(0, 3).toUpperCase() || '✈';
-  const toCode = dest?.split(',').pop()?.trim().slice(0, 3).toUpperCase() || '?';
+  const destParts = dest?.split(',').map((s) => s.trim()).filter(Boolean) || [];
+  const fromCode = destParts.length > 1 ? destParts[0].slice(0, 3).toUpperCase() : '✈';
+  const toCode = destParts.length > 0 ? destParts[destParts.length - 1].slice(0, 3).toUpperCase() : '?';
 
   const startDate = trip.start_date ? new Date(trip.start_date as string).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '';
   const endDate = trip.end_date ? new Date(trip.end_date as string).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '';
@@ -104,21 +105,20 @@ export default function TripDashboard({
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             style={{
-              padding: '10px 14px',
+              padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 6,
               fontSize: 13,
               fontWeight: activeTab === tab.id ? 700 : 500,
               color: activeTab === tab.id ? 'var(--ts-terra)' : 'var(--ts-ink-2)',
               background: 'none',
-              borderTop: 'none',
-              borderLeft: 'none',
-              borderRight: 'none',
+              borderTop: 'none', borderLeft: 'none', borderRight: 'none',
               borderBottom: activeTab === tab.id ? '2px solid var(--ts-terra)' : '2px solid transparent',
-              cursor: 'pointer',
-              transition: 'color .15s',
-              fontFamily: 'var(--ts-sans)',
+              cursor: 'pointer', transition: 'color .15s', fontFamily: 'var(--ts-sans)',
             }}
           >
-            {tab.icon} {tab.label}
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={activeTab === tab.id ? 2.5 : 2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d={tab.svgPath}/>
+            </svg>
+            {tab.label}
           </button>
         ))}
       </div>
@@ -148,19 +148,12 @@ export default function TripDashboard({
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            style={{
-              flex: 1,
-              padding: '8px 4px 10px',
-              textAlign: 'center',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: activeTab === tab.id ? 'var(--ts-terra)' : 'var(--ts-ink-3)',
-              transition: 'color .15s',
-            }}
+            style={{ flex: 1, padding: '8px 4px 10px', textAlign: 'center', background: 'none', border: 'none', cursor: 'pointer', color: activeTab === tab.id ? 'var(--ts-terra)' : 'var(--ts-ink-3)', transition: 'color .15s', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}
           >
-            <span style={{ display: 'block', fontSize: 18, lineHeight: 1, marginBottom: 2 }}>{tab.icon}</span>
-            <span style={{ display: 'block', fontSize: 9.5, fontWeight: activeTab === tab.id ? 700 : 500, letterSpacing: '.04em', fontFamily: 'var(--ts-sans)' }}>{tab.label}</span>
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={activeTab === tab.id ? 2.5 : 1.8}>
+              <path strokeLinecap="round" strokeLinejoin="round" d={tab.svgPath}/>
+            </svg>
+            <span style={{ fontSize: 9.5, fontWeight: activeTab === tab.id ? 700 : 500, letterSpacing: '.04em', fontFamily: 'var(--ts-sans)' }}>{tab.label}</span>
           </button>
         ))}
       </nav>

@@ -28,7 +28,7 @@ export function getDeadlineStatus(deadline: string): {
   const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
   const hours = Math.ceil(diff / (1000 * 60 * 60));
 
-  if (diff <= 0) return { label: 'Closed', urgency: 'closed' };
+  if (diff <= 0) return { label: 'Deadline passed', urgency: 'closed' };
   if (days > 3) return { label: `${days} days left`, urgency: 'normal' };
   if (days >= 1) return { label: `${days} day${days > 1 ? 's' : ''} left`, urgency: 'warning' };
   return { label: `${hours} hour${hours > 1 ? 's' : ''} left!`, urgency: 'urgent' };
