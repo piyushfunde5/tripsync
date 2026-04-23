@@ -1,6 +1,42 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
+export async function GET() {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Get all trips the user is a member of
+    const { data: members, error } = await supabase
+      .from('members')
+      .select(`
+        rsvp_status,
+        role,
+        trip:trips (
+          id, slug, title, destination, start_date, end_date, status,
+          members (id, name, avatar_url, rsvp_status, user_id)
+        )
+      `)
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    const trips = (members || [])
+      .map((m: any) => m.trip)
+      .filter(Boolean);
+
+    return NextResponse.json({ trips });
+  } catch (error) {
+    console.error('Get trips error:', error);
+    return NextResponse.json({ error: 'Failed to fetch trips' }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();

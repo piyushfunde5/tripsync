@@ -1,22 +1,159 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Geist:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
-@theme inline {
-  --color-primary: #2563EB;
-  --color-primary-dark: #1E40AF;
-  --color-success: #16A34A;
-  --color-warning: #F59E0B;
-  --color-danger: #DC2626;
-  --color-neutral-50: #F9FAFB;
-  --color-neutral-100: #F3F4F6;
-  --color-neutral-300: #D1D5DB;
-  --color-neutral-500: #6B7280;
-  --color-neutral-900: #111827;
-  --font-sans: 'Inter', sans-serif;
+/* ── TripSync Design Tokens · Vibe A — Sunset & Sand ── */
+:root {
+  /* Ink (text) */
+  --ts-ink:        #2b1d17;
+  --ts-ink-2:      #5a4436;
+  --ts-ink-3:      #8a7363;
+  --ts-ink-4:      #b8a690;
+
+  /* Surface (backgrounds) */
+  --ts-paper:      #fbf4e6;
+  --ts-paper-2:    #f4e7cc;
+  --ts-card:       #fffaf0;
+  --ts-card-2:     #f9efd8;
+  --ts-line:       rgba(43,29,23,.08);
+  --ts-line-2:     rgba(43,29,23,.14);
+
+  /* Brand */
+  --ts-terra:      #d96b3f;
+  --ts-terra-d:    #b0451f;
+  --ts-terra-l:    #f2a17c;
+  --ts-teal:       #0f5257;
+  --ts-teal-d:     #083a3e;
+  --ts-teal-l:     #4a8e92;
+  --ts-sun:        #f2b04a;
+  --ts-sun-d:      #c48a1a;
+  --ts-clay:       #8a4a3a;
+  --ts-sand:       #e9d9b8;
+
+  /* Status */
+  --ts-ok:         #2f7a4e;
+  --ts-ok-bg:      #dfeedd;
+  --ts-warn:       #c48a1a;
+  --ts-warn-bg:    #faecc7;
+  --ts-err:        #b0451f;
+  --ts-err-bg:     #fadfcf;
+  --ts-info:       #0f5257;
+  --ts-info-bg:    #d6ebec;
+
+  /* RSVP stamps */
+  --ts-in:         #2f7a4e;
+  --ts-in-bg:      #dfeedd;
+  --ts-maybe:      #c48a1a;
+  --ts-maybe-bg:   #faecc7;
+  --ts-out:        #8a7363;
+  --ts-out-bg:     #ece3d2;
+
+  /* Typography */
+  --ts-serif:      'Fraunces', ui-serif, Georgia, serif;
+  --ts-sans:       'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Radii */
+  --ts-r-xs: 6px; --ts-r-sm: 10px; --ts-r-md: 14px; --ts-r-lg: 18px; --ts-r-xl: 24px; --ts-r-pill: 999px;
+
+  /* Shadows */
+  --ts-shadow-sm:  0 1px 2px rgba(43,29,23,.06), 0 1px 1px rgba(43,29,23,.04);
+  --ts-shadow-md:  0 4px 12px -4px rgba(43,29,23,.12), 0 2px 4px rgba(43,29,23,.06);
+  --ts-shadow-lg:  0 20px 40px -16px rgba(43,29,23,.22), 0 6px 14px rgba(43,29,23,.08);
+  --ts-shadow-xl:  0 30px 60px -20px rgba(43,29,23,.28), 0 10px 20px rgba(43,29,23,.10);
+
+  /* Spacing (4pt) */
+  --ts-s-1: 4px; --ts-s-2: 8px; --ts-s-3: 12px; --ts-s-4: 16px;
+  --ts-s-5: 20px; --ts-s-6: 24px; --ts-s-7: 32px; --ts-s-8: 40px;
 }
 
-body {
-  font-family: var(--font-sans);
-  background-color: var(--color-neutral-50);
-  color: var(--color-neutral-900);
+[data-theme="dark"] {
+  --ts-ink:        #f6efe3;
+  --ts-ink-2:      #d2c3ae;
+  --ts-ink-3:      #95826b;
+  --ts-ink-4:      #6b5948;
+  --ts-paper:      #1a120d;
+  --ts-paper-2:    #221711;
+  --ts-card:       #2a1e16;
+  --ts-card-2:     #3a2a1f;
+  --ts-line:       rgba(246,239,227,.08);
+  --ts-line-2:     rgba(246,239,227,.14);
+  --ts-shadow-sm:  0 1px 2px rgba(0,0,0,.3);
+  --ts-shadow-md:  0 4px 12px -4px rgba(0,0,0,.5);
+  --ts-shadow-lg:  0 20px 40px -16px rgba(0,0,0,.6);
+  --ts-shadow-xl:  0 30px 60px -20px rgba(0,0,0,.7);
 }
+
+/* ── Tailwind theme overrides ── */
+@theme inline {
+  --color-primary:      #d96b3f;
+  --color-primary-dark: #b0451f;
+  --color-primary-light:#f2a17c;
+  --color-teal:         #0f5257;
+  --color-teal-dark:    #083a3e;
+  --color-sun:          #f2b04a;
+  --color-paper:        #fbf4e6;
+  --color-paper-2:      #f4e7cc;
+  --color-card:         #fffaf0;
+  --color-card-2:       #f9efd8;
+  --color-ink:          #2b1d17;
+  --color-ink-2:        #5a4436;
+  --color-ink-3:        #8a7363;
+  --color-success:      #2f7a4e;
+  --color-warning:      #c48a1a;
+  --color-danger:       #b0451f;
+  --font-sans:          'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-serif:         'Fraunces', ui-serif, Georgia, serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--ts-sans);
+  background-color: var(--ts-paper);
+  color: var(--ts-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Utility classes ── */
+.font-serif  { font-family: var(--ts-serif); }
+.font-sans   { font-family: var(--ts-sans); }
+
+/* Paper dot texture */
+.ts-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(43,29,23,.05) 1px, transparent 1.2px);
+  background-size: 3px 3px;
+  mix-blend-mode: multiply;
+  opacity: .3;
+  z-index: 0;
+}
+.ts-texture > * { position: relative; z-index: 1; }
+
+/* Floating animation for boarding pass */
+@keyframes ts-float {
+  0%,100% { transform: rotate(-2deg) translateY(0); }
+  50%      { transform: rotate(-2deg) translateY(-5px); }
+}
+.ts-float { animation: ts-float 6s ease-in-out infinite; }
+
+/* Pulse dot */
+@keyframes ts-pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.4; transform:scale(1.4); }
+}
+.ts-pulse { animation: ts-pulse 1.4s ease-in-out infinite; }
+
+/* Route line draw */
+@keyframes ts-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Scrollbar hide */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Dashed divider */
+.dashed-top  { border-top: 1px dashed var(--ts-line-2); }
+.dashed-bottom { border-bottom: 1px dashed var(--ts-line-2); }

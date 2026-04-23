@@ -80,17 +80,12 @@ export default function PollsTab({ members, currentMember, decisions, polls, slu
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 20 }}>
       {/* Active Polls */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-semibold text-neutral-900">Active Polls</h2>
-          <button
-            onClick={() => setShowCreatePoll(true)}
-            className="text-sm font-medium text-primary hover:text-primary-dark"
-          >
-            + New Poll
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={{ fontFamily: 'var(--ts-serif)', fontWeight: 500, fontSize: 18, color: 'var(--ts-ink)' }}>Active polls</div>
+          <button onClick={() => setShowCreatePoll(true)} style={{ fontSize: 13, fontWeight: 700, color: 'var(--ts-terra)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>+ New</button>
         </div>
 
         {openPolls.length > 0 ? (
@@ -121,7 +116,7 @@ export default function PollsTab({ members, currentMember, decisions, polls, slu
       {/* Closed Polls */}
       {closedPolls.length > 0 && (
         <div>
-          <h2 className="text-base font-semibold text-neutral-900 mb-3">Closed Polls</h2>
+          <div style={{ fontFamily: 'var(--ts-serif)', fontWeight: 500, fontSize: 18, color: 'var(--ts-ink)', marginBottom: 12 }}>Past polls</div>
           <div className="space-y-3">
             {closedPolls.map((poll) => (
               <PollCard
@@ -140,53 +135,35 @@ export default function PollsTab({ members, currentMember, decisions, polls, slu
 
       {/* Decision Log */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-semibold text-neutral-900">Decision Log</h2>
-          <button
-            onClick={() => setShowCreateDecision(true)}
-            className="text-sm font-medium text-primary hover:text-primary-dark"
-          >
-            + Log Decision
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <div style={{ fontFamily: 'var(--ts-serif)', fontWeight: 500, fontSize: 18, color: 'var(--ts-ink)' }}>Decisions</div>
+          <button onClick={() => setShowCreateDecision(true)} style={{ fontSize: 13, fontWeight: 700, color: 'var(--ts-terra)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>+ Log</button>
         </div>
 
         {decisions.length > 0 ? (
-          <div className="bg-white rounded-xl border border-neutral-100 shadow-sm divide-y divide-neutral-50">
-            {decisions.map((d) => {
+          <div style={{ background: 'var(--ts-card)', border: '1px solid var(--ts-line)', borderRadius: 16, boxShadow: 'var(--ts-shadow-sm)', overflow: 'hidden' }}>
+            {decisions.map((d, i) => {
               const status = d.status as DecisionStatus;
               const canUpdate = isOrganizer || status === 'proposed';
 
               return (
-                <div key={d.id as string} className="p-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-neutral-900 truncate">{d.title as string}</p>
-                        {d.category ? (
-                          <span className="text-xs text-neutral-400 shrink-0">{d.category as string}</span>
-                        ) : null}
-                      </div>
-                      {d.decided_value ? (
-                        <p className="text-xs text-neutral-500 mt-0.5">{d.decided_value as string}</p>
-                      ) : null}
+                <div key={d.id as string} style={{ padding: '12px 14px', borderTop: i === 0 ? 'none' : '1px solid var(--ts-line)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: status === 'booked' || status === 'decided' ? 'var(--ts-ok-bg)' : 'var(--ts-card-2)', color: status === 'booked' || status === 'decided' ? 'var(--ts-ok)' : 'var(--ts-ink-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: 14 }}>
+                      {status === 'booked' ? '✓' : status === 'decided' ? '✓' : '·'}
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <StatusBadge status={status} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 11, color: 'var(--ts-ink-3)', letterSpacing: '.08em', fontWeight: 700, textTransform: 'uppercase' }}>{d.category as string || 'General'}</div>
+                      <div style={{ fontFamily: 'var(--ts-serif)', fontWeight: 500, fontSize: 15, color: 'var(--ts-ink)' }}>{d.title as string}</div>
+                      {!!d.decided_value && <div style={{ fontSize: 12, color: 'var(--ts-ink-2)', marginTop: 1 }}>{d.decided_value as string}</div>}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                      <div style={{ fontSize: 10.5, color: 'var(--ts-ink-3)', padding: '3px 7px', borderRadius: 999, border: '1px solid var(--ts-line-2)' }}>{status}</div>
                       {canUpdate && status === 'proposed' && isOrganizer && (
-                        <button
-                          onClick={() => handleUpdateDecision(d.id as string, 'decided')}
-                          className="text-xs text-primary hover:text-primary-dark font-medium"
-                        >
-                          Mark Decided
-                        </button>
+                        <button onClick={() => handleUpdateDecision(d.id as string, 'decided')} style={{ fontSize: 11, color: 'var(--ts-terra)', fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>Decide</button>
                       )}
                       {canUpdate && status === 'decided' && isOrganizer && (
-                        <button
-                          onClick={() => handleUpdateDecision(d.id as string, 'booked')}
-                          className="text-xs text-green-600 hover:text-green-700 font-medium"
-                        >
-                          Mark Booked
-                        </button>
+                        <button onClick={() => handleUpdateDecision(d.id as string, 'booked')} style={{ fontSize: 11, color: 'var(--ts-ok)', fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>Book</button>
                       )}
                     </div>
                   </div>

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "TripSync - Plan Group Trips Without the Chaos",
-  description: "One link. Everyone on the same page. No app install needed. RSVP, polls, expenses, itinerary — all in one place.",
+  title: "TripSync — Group trips, finally sorted",
+  description: "Polls, itinerary, tasks and splits — in one warm little place your group will actually open.",
 };
 
 export default function RootLayout({
@@ -12,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900">
+    <html lang="en" className="h-full">
+      <body className="min-h-full flex flex-col" style={{ background: 'var(--ts-paper)', color: 'var(--ts-ink)' }}>
         {children}
       </body>
     </html>

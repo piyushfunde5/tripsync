@@ -183,49 +183,39 @@ export default function TasksTab({ tasks: rawTasks, members, currentMember, slug
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header with summary + filters */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <p className="text-sm text-neutral-500">
-            {completedCount}/{tasks.length} complete
-            {overdueCount > 0 ? (
-              <span className="text-red-500 ml-1">· {overdueCount} overdue</span>
-            ) : null}
-          </p>
+    <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ fontSize: 13, color: 'var(--ts-ink-2)' }}>
+          {completedCount}/{tasks.length} done
+          {overdueCount > 0 && <span style={{ color: 'var(--ts-err)', marginLeft: 6 }}>· {overdueCount} overdue</span>}
         </div>
-        <button
-          onClick={() => setShowCreateTask(true)}
-          className="text-sm text-primary font-medium hover:text-primary-dark transition-colors"
-        >
-          + New Task
-        </button>
+        <button onClick={() => setShowCreateTask(true)} style={{ fontSize: 13, fontWeight: 700, color: 'var(--ts-terra)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>+ New Task</button>
       </div>
 
       {/* Filter pills */}
-      <div className="flex gap-2">
-        {(['all', 'mine', 'overdue'] as const).map((f) => (
+      <div style={{ display: 'flex', gap: 8 }}>
+        {(['all', 'mine', 'overdue'] as const).map(f => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-              filter === f
-                ? 'bg-primary text-white'
-                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-            }`}
+            style={{
+              padding: '7px 14px', borderRadius: 999,
+              border: `1.5px solid ${filter === f ? 'var(--ts-terra)' : 'var(--ts-line-2)'}`,
+              background: filter === f ? 'rgba(217,107,63,.08)' : 'var(--ts-card)',
+              color: filter === f ? 'var(--ts-terra-d)' : 'var(--ts-ink-2)',
+              fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'var(--ts-sans)',
+            }}
           >
-            {f === 'all' ? 'All' : f === 'mine' ? 'My Tasks' : 'Overdue'}
-            {f === 'overdue' && overdueCount > 0 ? ` (${overdueCount})` : ''}
+            {f === 'all' ? 'All' : f === 'mine' ? 'Mine' : 'Overdue'}
+            {f === 'overdue' && overdueCount > 0 ? ` · ${overdueCount}` : ''}
           </button>
         ))}
       </div>
 
       {/* Progress bar */}
-      <div className="bg-neutral-100 rounded-full h-2 overflow-hidden">
-        <div
-          className="bg-green-500 h-full rounded-full transition-all duration-500 ease-out"
-          style={{ width: `${tasks.length > 0 ? (completedCount / tasks.length) * 100 : 0}%` }}
-        />
+      <div style={{ height: 6, borderRadius: 3, background: 'var(--ts-card-2)', overflow: 'hidden' }}>
+        <div style={{ width: `${tasks.length > 0 ? (completedCount / tasks.length) * 100 : 0}%`, height: '100%', background: 'linear-gradient(90deg, var(--ts-terra), var(--ts-sun))', transition: 'width .5s ease' }} />
       </div>
 
       {/* Task list */}
@@ -233,12 +223,10 @@ export default function TasksTab({ tasks: rawTasks, members, currentMember, slug
         <EmptyState
           icon={filter === 'overdue' ? '🎉' : '📋'}
           title={filter === 'mine' ? 'No tasks for you' : 'No overdue tasks'}
-          description={filter === 'mine'
-            ? 'You have no tasks assigned. Enjoy the free time!'
-            : 'Everything is on track. No overdue tasks right now.'}
+          description={filter === 'mine' ? 'You have no tasks assigned. Enjoy the free time!' : 'Everything is on track. No overdue tasks right now.'}
         />
       ) : (
-        <div className="space-y-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {filteredTasks.map((task) => {
             const effectiveStatus = getEffectiveStatus(task);
             const isExpanded = expandedTask === task.id;
@@ -248,106 +236,62 @@ export default function TasksTab({ tasks: rawTasks, members, currentMember, slug
             return (
               <div
                 key={task.id}
-                className={`bg-white rounded-xl border shadow-sm transition-all ${
-                  effectiveStatus === 'overdue'
-                    ? 'border-red-200 bg-red-50/30'
-                    : effectiveStatus === 'done'
-                    ? 'border-green-100 opacity-75'
-                    : 'border-neutral-100'
-                }`}
+                style={{
+                  background: 'var(--ts-card)',
+                  border: `1px solid var(--ts-line)`,
+                  borderLeft: effectiveStatus === 'overdue' ? '3px solid var(--ts-err)' : `1px solid var(--ts-line)`,
+                  borderRadius: 14,
+                  boxShadow: 'var(--ts-shadow-sm)',
+                  opacity: effectiveStatus === 'done' ? 0.65 : 1,
+                }}
               >
-                <div
-                  className="p-3 cursor-pointer"
-                  onClick={() => setExpandedTask(isExpanded ? null : task.id)}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        {/* Done checkbox visual */}
-                        <div
-                          className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                            effectiveStatus === 'done'
-                              ? 'bg-green-500 border-green-500'
-                              : effectiveStatus === 'overdue'
-                              ? 'border-red-400'
-                              : effectiveStatus === 'in_progress'
-                              ? 'border-amber-400'
-                              : 'border-neutral-300'
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (effectiveStatus === 'done') {
-                              handleStatusUpdate(task.id, 'assigned');
-                            } else if (isAssignee || isOrganizer || isCreator) {
-                              handleStatusUpdate(task.id, 'done');
-                            }
-                          }}
-                        >
-                          {effectiveStatus === 'done' && (
-                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                          )}
-                          {effectiveStatus === 'in_progress' && (
-                            <div className="w-2 h-2 bg-amber-400 rounded-full" />
-                          )}
-                        </div>
+                <div style={{ padding: '12px 14px', cursor: 'pointer' }} onClick={() => setExpandedTask(isExpanded ? null : task.id)}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                    <div
+                      style={{
+                        width: 22, height: 22, borderRadius: '50%', flexShrink: 0, marginTop: 2,
+                        border: `1.5px solid ${effectiveStatus === 'done' ? 'var(--ts-ok)' : effectiveStatus === 'overdue' ? 'var(--ts-err)' : 'var(--ts-line-2)'}`,
+                        background: effectiveStatus === 'done' ? 'var(--ts-ok)' : 'transparent',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                      }}
+                      onClick={e => { e.stopPropagation(); if (effectiveStatus === 'done') { handleStatusUpdate(task.id, 'assigned'); } else if (isAssignee || isOrganizer || isCreator) { handleStatusUpdate(task.id, 'done'); } }}
+                    >
+                      {effectiveStatus === 'done' && <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
+                      {effectiveStatus === 'in_progress' && <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--ts-warn)' }}/>}
+                    </div>
 
-                        <p className={`text-sm font-medium truncate ${
-                          effectiveStatus === 'done' ? 'line-through text-neutral-400' : 'text-neutral-900'
-                        }`}>
-                          {task.title}
-                        </p>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                        <span style={{ fontWeight: 600, fontSize: 14.5, color: 'var(--ts-ink)', textDecoration: effectiveStatus === 'done' ? 'line-through' : 'none' }}>{task.title}</span>
+                        {effectiveStatus === 'overdue' && <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--ts-err)', letterSpacing: '.1em', textTransform: 'uppercase' }}>Overdue</span>}
                       </div>
-
                       {task.assignee && (
-                        <div className="flex items-center gap-1.5 mt-1.5 ml-6.5">
-                          <Avatar name={task.assignee.name} avatarUrl={task.assignee.avatar_url} size="sm" />
-                          <span className="text-xs text-neutral-500">{task.assignee.name}</span>
-                          {isAssignee && (
-                            <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-medium">You</span>
-                          )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6 }}>
+                          <Avatar name={task.assignee.name} avatarUrl={task.assignee.avatar_url} size={20} />
+                          <span style={{ fontSize: 11.5, color: 'var(--ts-ink-2)' }}>{task.assignee.name}</span>
+                          {isAssignee && <span style={{ fontSize: 10, background: 'rgba(217,107,63,.1)', color: 'var(--ts-terra)', padding: '2px 6px', borderRadius: 999, fontWeight: 700 }}>You</span>}
                         </div>
                       )}
                     </div>
 
-                    <div className="flex flex-col items-end gap-1 shrink-0">
-                      <StatusBadge status={effectiveStatus} />
-                      {task.deadline && <DeadlineCountdown deadline={task.deadline} />}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
+                      {task.deadline && (
+                        <span style={{ fontSize: 11, color: effectiveStatus === 'overdue' ? 'var(--ts-err)' : 'var(--ts-ink-3)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                          📅 {new Date(task.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
 
-                {/* Expanded details */}
                 {isExpanded && (
-                  <div className="border-t border-neutral-100 px-3 pb-3 pt-2 space-y-3">
-                    {task.description && (
-                      <p className="text-xs text-neutral-500 leading-relaxed">{task.description}</p>
-                    )}
-
-                    {task.creator && (
-                      <p className="text-xs text-neutral-400">
-                        Created by {task.creator.name}
-                        {task.created_at && (
-                          <> · {new Date(task.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}</>
-                        )}
-                      </p>
-                    )}
-
-                    <div className="flex items-center justify-between pt-1">
-                      {/* Actions */}
-                      <div className="flex items-center gap-2">
-                        {getActionButton(task)}
-                      </div>
-
-                      {/* Delete */}
+                  <div style={{ borderTop: '1px solid var(--ts-line)', padding: '10px 14px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {task.description && <p style={{ fontSize: 12.5, color: 'var(--ts-ink-2)', lineHeight: 1.5 }}>{task.description}</p>}
+                    {task.creator && <p style={{ fontSize: 11, color: 'var(--ts-ink-3)' }}>Created by {task.creator.name} · {new Date(task.created_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}</p>}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div>{getActionButton(task)}</div>
                       {(isOrganizer || isCreator) && (
-                        <button
-                          onClick={() => handleDelete(task.id)}
-                          className="text-xs text-neutral-400 hover:text-red-500 transition-colors"
-                        >
-                          Delete
-                        </button>
+                        <button onClick={() => handleDelete(task.id)} style={{ fontSize: 12, color: 'var(--ts-ink-3)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--ts-sans)' }}>Delete</button>
                       )}
                     </div>
                   </div>
@@ -358,15 +302,15 @@ export default function TasksTab({ tasks: rawTasks, members, currentMember, slug
         </div>
       )}
 
-      {/* Create Task Modal */}
-      {showCreateTask && (
-        <CreateTaskModal
-          slug={slug}
-          members={members}
-          onClose={() => setShowCreateTask(false)}
-          onCreated={handleTaskCreated}
-        />
-      )}
+      {showCreateTask && <CreateTaskModal slug={slug} members={members} onClose={() => setShowCreateTask(false)} onCreated={handleTaskCreated} />}
+
+      {/* FAB */}
+      <button
+        onClick={() => setShowCreateTask(true)}
+        style={{ position: 'fixed', bottom: 88, right: 'max(16px, calc(50% - 304px))', display: 'flex', alignItems: 'center', gap: 8, padding: '12px 20px', background: 'var(--ts-terra)', color: 'white', border: 'none', borderRadius: 'var(--ts-r-pill)', fontSize: 13, fontWeight: 700, cursor: 'pointer', boxShadow: '0 6px 20px -4px rgba(217,107,63,.5)', fontFamily: 'var(--ts-sans)', zIndex: 20 }}
+      >
+        + New Task
+      </button>
     </div>
   );
 }

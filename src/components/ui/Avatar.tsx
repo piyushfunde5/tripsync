@@ -1,33 +1,48 @@
 'use client';
 
-import { getInitials, getAvatarColor } from '@/lib/utils';
+import { getInitials } from '@/lib/utils';
 
 interface AvatarProps {
   name: string;
   avatarUrl?: string | null;
-  size?: 'sm' | 'md' | 'lg';
+  size?: number | 'sm' | 'md' | 'lg';
+  color?: string;
 }
 
-const sizeClasses = {
-  sm: 'w-7 h-7 text-xs',
-  md: 'w-9 h-9 text-sm',
-  lg: 'w-12 h-12 text-base',
-};
+const sizeMap = { sm: 28, md: 36, lg: 48 };
 
-export default function Avatar({ name, avatarUrl, size = 'md' }: AvatarProps) {
+export default function Avatar({ name, avatarUrl, size = 'md', color }: AvatarProps) {
+  const px = typeof size === 'number' ? size : sizeMap[size];
+  const fontSize = Math.round(px * 0.38);
+
+  const bg = color || '#d96b3f';
+
   if (avatarUrl) {
     return (
       <img
         src={avatarUrl}
         alt={name}
-        className={`${sizeClasses[size]} rounded-full object-cover`}
+        style={{ width: px, height: px, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
       />
     );
   }
 
   return (
     <div
-      className={`${sizeClasses[size]} ${getAvatarColor(name)} rounded-full flex items-center justify-center text-white font-medium`}
+      style={{
+        width: px,
+        height: px,
+        borderRadius: '50%',
+        background: bg,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontWeight: 600,
+        fontSize,
+        flexShrink: 0,
+        fontFamily: 'var(--ts-sans)',
+      }}
     >
       {getInitials(name)}
     </div>
