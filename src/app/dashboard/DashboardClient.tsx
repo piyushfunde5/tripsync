@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 import AvatarStack from '@/components/ui/AvatarStack';
 import Stamp from '@/components/ui/Stamp';
 import Avatar from '@/components/ui/Avatar';
@@ -118,8 +119,13 @@ export default function DashboardClient({ user, trips }: DashboardClientProps) {
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <button
-            onClick={() => router.push('/')}
+            onClick={async () => {
+              const supabase = createClient();
+              await supabase.auth.signOut();
+              router.push('/');
+            }}
             style={{ width: 38, height: 38, borderRadius: '50%', background: 'var(--ts-card)', border: '1px solid var(--ts-line)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ts-ink-2)', cursor: 'pointer' }}
+            title="Sign out"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
           </button>
